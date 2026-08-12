@@ -62,7 +62,10 @@ export default async ({ req, res, log, error }) => {
         // Convert headers to a plain object for Appwrite res.send()
         const resHeaders = {};
         response.headers.forEach((value, key) => {
-            resHeaders[key] = value;
+            const lower = key.toLowerCase();
+            if (lower !== 'content-encoding' && lower !== 'content-length' && lower !== 'transfer-encoding') {
+                resHeaders[key] = value;
+            }
         });
 
         // Ensure CORS if needed
