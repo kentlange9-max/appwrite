@@ -1,0 +1,7 @@
+{
+  "name": "appwrite-proxy",
+  "version": "1.0.0",
+  "description": "Appwrite Edge Proxy",
+  "main": "src/main.js",
+  "dependencies": {}
+}
