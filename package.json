@@ -3,5 +3,6 @@
   "version": "1.0.0",
   "description": "Appwrite Edge Proxy",
   "main": "src/main.js",
+  "type": "module",
   "dependencies": {}
 }
