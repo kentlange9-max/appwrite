@@ -4,5 +4,7 @@
   "description": "Appwrite Edge Proxy",
   "main": "src/main.js",
   "type": "module",
-  "dependencies": {}
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
 }
