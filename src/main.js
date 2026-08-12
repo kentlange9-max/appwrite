@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+
 export default async ({ req, res, log, error }) => {
     // Appwrite parses the raw URL and query parameters for us
     const targetUrl = req.query.xtargeturl || req.headers['x-target-url'];
