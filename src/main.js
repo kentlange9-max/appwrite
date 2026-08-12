@@ -1,10 +1,22 @@
 import fetch from 'node-fetch';
 
 export default async ({ req, res, log, error }) => {
-    // Appwrite parses the raw URL and query parameters for us
-    const targetUrl = req.query.xtargeturl || req.headers['x-target-url'];
+    let targetUrl = req.headers['x-target-url'] || req.headers['x-targeturl'];
+    
+    if (!targetUrl && req.queryString) {
+        const params = new URLSearchParams(req.queryString);
+        targetUrl = params.get('xtargeturl');
+    }
+    
+    if (!targetUrl && req.url) {
+        try {
+            const urlObj = new URL(req.url);
+            targetUrl = urlObj.searchParams.get('xtargeturl');
+        } catch (e) {}
+    }
 
     if (!targetUrl) {
+        log(`Missing target URL. Headers: ${JSON.stringify(req.headers)}, QueryString: ${req.queryString}, URL: ${req.url}`);
         return res.send("Missing xtargeturl or x-target-url header/query", 400);
     }
 
