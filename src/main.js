@@ -11,26 +11,26 @@ export default async ({ req, res, log, error }) => {
     // Generate a completely fake random IP to spoof the X-Forwarded-For header
     const fakeIp = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
 
-    // Build headers for the upstream request
-    const upstreamHeaders = new Headers();
+    // Build headers for the upstream request using a plain object
+    const upstreamHeaders = {};
     
     // Copy all original headers except the snitch ones
     for (const [key, value] of Object.entries(req.headers)) {
         const lowerKey = key.toLowerCase();
         if (!['x-target-url', 'host', 'x-appwrite-trigger', 'x-appwrite-event', 'x-appwrite-user-id', 'x-appwrite-user-jwt'].includes(lowerKey)) {
-            upstreamHeaders.set(key, value);
+            upstreamHeaders[key] = value;
         }
     }
 
     // Hard-spoof browser headers so use.ai doesn't block it
-    upstreamHeaders.set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-    upstreamHeaders.set('Origin', 'https://use.ai');
-    upstreamHeaders.set('Referer', 'https://use.ai/');
+    upstreamHeaders['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+    upstreamHeaders['Origin'] = 'https://use.ai';
+    upstreamHeaders['Referer'] = 'https://use.ai/';
     
     // Lie about where we came from
-    upstreamHeaders.set('X-Forwarded-For', fakeIp);
-    upstreamHeaders.set('True-Client-IP', fakeIp);
-    upstreamHeaders.set('CF-Connecting-IP', fakeIp);
+    upstreamHeaders['X-Forwarded-For'] = fakeIp;
+    upstreamHeaders['True-Client-IP'] = fakeIp;
+    upstreamHeaders['CF-Connecting-IP'] = fakeIp;
 
     try {
         const fetchOptions = {
